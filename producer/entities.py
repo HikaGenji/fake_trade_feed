@@ -61,9 +61,9 @@ def create_trade(instrument):
                'EVT_TRD_MMT_LEVL_4_TRD_TYP_CD_RT': '', 'EVT_TRD_MMT_LVL_4.1_TRD_T_CD_RT':'',
                'EVT_TRD_MMT_LVL_4.2_TRD_T_CD_RT': '', 'EVT_TRD_MMT_LVL_5_TRD_TYP_CD_RT':'',
                'evt_trade_condition_code_rt': sample(['OA', 'CO', ''], 1)[0], 'evt_trade_indicator_realtime': '',
-               'evt_trade_esma_trade_flags_rt': '', 'exch_code_last,evt_trade_bloomberg_std_cc_rt': '',
+               'evt_trade_esma_trade_flags_rt': '', 'exch_code_last': '', 'evt_trade_bloomberg_std_cc_rt': '',
                'evt_trade_source_type_code_rt': '', 'evt_trade_mkt_partic_src_tm_rt': '',
-               'evt_trade_rpt_prty_side_rt': '', 'evt_trade_bic_rt,evt_trade_aggressor_rt': 'B',
+               'evt_trade_rpt_prty_side_rt': '', 'evt_trade_bic_rt': '', 'evt_trade_aggressor_rt': 'B',
                'evt_trade_mic_rt': 'XBRU', 'evt_trade_discount_rt': ''}
 
     if drop_mmt:
