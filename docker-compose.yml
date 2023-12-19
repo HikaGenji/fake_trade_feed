@@ -1,0 +1,64 @@
+version: '3.7'
+services:
+  redpanda:
+    image: vectorized/redpanda:latest
+    container_name: redpanda
+    command:
+        - redpanda start
+        - --overprovisioned
+        - --smp 1
+        - --memory 1G
+        - --reserve-memory 0M
+        - --node-id 0
+        - --check=false
+        - --kafka-addr 0.0.0.0:9092
+        - --advertise-kafka-addr redpanda:9092
+        - --pandaproxy-addr 0.0.0.0:8082
+        - --advertise-pandaproxy-addr redpanda:8082
+        - --set redpanda.enable_transactions=true
+        - --set redpanda.enable_idempotence=true
+        - --set redpanda.auto_create_topics_enabled=true
+    ports:
+      - "9092:9092"
+      - "8081:8081"
+      - "8082:8082"
+  console:
+    image: docker.redpanda.com/redpandadata/console:latest
+    container_name: console
+    entrypoint: /bin/sh
+    command: -c "echo \"$$CONSOLE_CONFIG_FILE\" > /tmp/config.yml; /app/console"
+    environment:
+      CONFIG_FILEPATH: /tmp/config.yml
+      CONSOLE_CONFIG_FILE: |
+        kafka:
+          brokers: ["redpanda:9092"]
+          schemaRegistry:
+            enabled: false
+    ports:
+      - 8080:8080
+    depends_on:
+      - redpanda
+  risingwave:
+    image: risingwavelabs/risingwave:latest
+    container_name: risingwave
+    ports:
+      - "5691:5691"
+      - "4566:4566"
+  sqlpad:
+    image: sqlpad/sqlpad
+    container_name: sqlpad
+    depends_on:
+      - risingwave
+    ports:
+      - "3001:3000"
+    environment:
+      - SQLPAD_ADMIN=admin
+      - SQLPAD_ADMIN_PASSWORD=123
+  producer:
+    image: producer
+    container_name: producer
+    depends_on:
+      - redpanda
+      - risingwave
+    environment:
+      - n_instrument=100
